@@ -83,6 +83,10 @@ include_directories(
   
 )
 
+install(PROGRAMS
+  scripts/aubo_client_node.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 add_library(aubo_robot_driver_plugin 
   SHARED
