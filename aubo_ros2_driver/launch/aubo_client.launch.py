@@ -15,6 +15,10 @@ def generate_launch_description():
             default_value='30004',
             description='TCP server port'
         ),
+        DeclareLaunchArgument(
+            'log_level', 
+            default_value='info'
+        ),
         Node(
             package='aubo_ros2_driver',
             executable='aubo_client_node.py',
@@ -23,6 +27,7 @@ def generate_launch_description():
             parameters=[{
                 'tcp_client.ip': LaunchConfiguration('ip'),
                 'tcp_client.port': LaunchConfiguration('port'),
-            }]
+            }],
+            arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
         )
     ])
