@@ -21,7 +21,9 @@ def load_yaml(package_name, file_path):
     try:
         with open(absolute_file_path, "r") as file:
             return yaml.safe_load(file)
-    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+    except (
+        EnvironmentError
+    ):  # parent of IOError, OSError *and* WindowsError where available
         return None
 
 
@@ -43,7 +45,7 @@ def launch_setup(context, *args, **kwargs):
             ),
             " ",
             "aubo_type:=",
-             aubo_type,
+            aubo_type,
             " ",
         ]
     )
@@ -64,9 +66,7 @@ def launch_setup(context, *args, **kwargs):
         )
     }
 
-    kinematics_yaml = load_yaml(
-        "aubo_moveit_config", "config/kinematics.yaml"
-    )
+    kinematics_yaml = load_yaml("aubo_moveit_config", "config/kinematics.yaml")
 
     joint_limits_yaml = {
         "robot_description_planning": load_yaml(
@@ -83,9 +83,7 @@ def launch_setup(context, *args, **kwargs):
             "sample_duration": 0.005,
         }
     }
-    ompl_planning_yaml = load_yaml(
-        "aubo_moveit_config", "config/ompl_planning.yaml"
-    )
+    ompl_planning_yaml = load_yaml("aubo_moveit_config", "config/ompl_planning.yaml")
     ompl_planning_pipeline_config["move_group"].update(ompl_planning_yaml)
 
     # Trajectory Execution Functionality
@@ -118,7 +116,7 @@ def launch_setup(context, *args, **kwargs):
             "publish_planning_scene_topic": "/move_group/publish_planning_scene",
             "monitored_planning_scene_topic": "/move_group/monitored_planning_scene",
             "wait_for_initial_state_timeout": 10.0,
-           }
+        },
     }
 
     # Start the actual move_group node/action server
@@ -176,18 +174,22 @@ def launch_setup(context, *args, **kwargs):
         parameters=[robot_description],
     )
     joint_state_publisher_node = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui',
-        parameters=[robot_description]
-        )
+        package="joint_state_publisher_gui",
+        executable="joint_state_publisher_gui",
+        name="joint_state_publisher_gui",
+        parameters=[robot_description],
+    )
 
-    nodes_to_start = [move_group_node, rviz_node, static_tf_node, robot_state_pub_node]
+    nodes_to_start = [
+        move_group_node,
+        rviz_node,
+        # static_tf_node,
+        # robot_state_pub_node,
+    ]
     return nodes_to_start
 
 
 def generate_launch_description():
-
     declared_arguments = []
 
     # TODO(andyz): add other options
